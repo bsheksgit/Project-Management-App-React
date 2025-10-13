@@ -1,8 +1,16 @@
+import AddProjectPage from "./components/AddProjectPage";
 import YourProjects from "./components/YourProjects";
 
 function App() {
   return (
-    <YourProjects/>
+    <div className="flex w-full min-h-screen">
+      <div className="w-[30%]">
+        <YourProjects/>
+      </div>
+      <div className="w-[70%]">
+        <AddProjectPage/>
+      </div>
+    </div>
   );
 }
 
