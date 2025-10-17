@@ -1,7 +1,9 @@
-export default function ProjectListItem({project}){
+export default function ProjectListItem({project, handleSelectProject}){
     return (
         <li className="list-disc text-white ml-6 p-2 rounded-md hover:bg-white/10 transition-colors cursor-pointer">
-            {project}
+            <button onClick={ (e) => handleSelectProject(e.target.textContent)}>
+            {project.projectName}
+            </button>
         </li>
     );
 }
