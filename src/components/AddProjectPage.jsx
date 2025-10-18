@@ -11,7 +11,7 @@ const AddProjectPage = forwardRef(function AddProjectPage({selectedProject, hand
             return {
                 name: nameRef.current.value,
                 description: descriptionRef.current.value,
-                date: dateRef.current.value
+                date: dateRef.current.value,
             };
         }
     }));
