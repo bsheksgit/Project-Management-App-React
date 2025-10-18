@@ -7,9 +7,8 @@ function App() {
 
   const [projectList, setProjectList] = useState([]);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(-1);
-  const nameRef = useRef();
-  const descriptionRef = useRef();
-  const dateRef = useRef();
+  const formRef = useRef();
+
 
   function handleAddProject(newItem){
       setProjectList((prevValue) => 
@@ -24,9 +23,19 @@ function App() {
   }
 
   function handleSaveProject(){
-    projectList[selectedProjectIndex].name = nameRef.getValue();
-    projectList[selectedProjectIndex].description = descriptionRef.getValue();
-    projectList[selectedProjectIndex].date = dateRef.getValue();
+    const values = formRef.current.getValue();
+    projectList[selectedProjectIndex].projectName = values.name;
+    projectList[selectedProjectIndex].description = values.description;
+    projectList[selectedProjectIndex].date = values.date;
+  }
+
+  function handleProjectUpdate(updatedProject) {
+      const newProjectList = [...projectList];
+      newProjectList[selectedProjectIndex] = {
+          ...newProjectList[selectedProjectIndex],
+          ...updatedProject
+      };
+      setProjectList(newProjectList);
   }
 
   return (
@@ -36,11 +45,11 @@ function App() {
       </div>
       <div className="w-[70%]">
         {(projectList.length>0 && selectedProjectIndex >= 0)?<AddProjectPage 
-        selectedProject={projectList[selectedProjectIndex]} 
-        handleSaveProject={handleSaveProject} 
-        nameRef={nameRef}
-        descriptionRef={descriptionRef}
-        dateRef={dateRef}/>:<BlankProjectWindow/>}
+            selectedProject={projectList[selectedProjectIndex]} 
+            handleSaveProject={handleSaveProject}
+            ref={formRef}
+            handleProjectUpdate={handleProjectUpdate}
+        />:<BlankProjectWindow/>}
       </div>
     </div>
   );

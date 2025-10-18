@@ -1,28 +1,20 @@
-import {useRef, useImperativeHandle} from 'react';
+import {useRef, useImperativeHandle, forwardRef} from 'react';
 
-export default function AddProjectPage({selectedProject, handleSaveProject, nameRef, descriptionRef, dateRef}){
+const AddProjectPage = forwardRef(function AddProjectPage({selectedProject, handleSaveProject, handleProjectUpdate}, ref){
 
-    useImperativeHandle(nameRef, ()=>{
-        return{
-            getValue(){
-                return nameRef.current.value;
-            }
+    const nameRef = useRef();
+    const descriptionRef = useRef();
+    const dateRef = useRef();
+    
+    useImperativeHandle(ref, () => ({
+        getValue() {
+            return {
+                name: nameRef.current.value,
+                description: descriptionRef.current.value,
+                date: dateRef.current.value
+            };
         }
-    });
-        useImperativeHandle(descriptionRef, ()=>{
-        return{
-            getValue(){
-                return descriptionRef.current.value;
-            }
-        }
-    });
-        useImperativeHandle(dateRef, ()=>{
-        return{
-            getValue(){
-                return dateRef.current.value;
-            }
-        }
-    });
+    }));
 
     return(
         <div className="h-full bg-gray-200 p-6">
@@ -37,9 +29,12 @@ export default function AddProjectPage({selectedProject, handleSaveProject, name
                 <input 
                     type="text" 
                     className="w-3/4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-gray-400 transition-colors"
-                    value={selectedProject.projectName}
+                    value={selectedProject.projectName || 'Enter Project Title'}
                     ref={nameRef}
-                    onChange={(event) => {nameRef.current.value = event.target.value;}}
+                    onChange={(event) => {
+                        nameRef.current.value = event.target.value;
+                        handleProjectUpdate({ projectName: event.target.value });
+                    }}
                 />
             </div>
             <div className="flex items-center space-x-4 w-2/3">
@@ -47,9 +42,11 @@ export default function AddProjectPage({selectedProject, handleSaveProject, name
                 <input 
                     type="text" 
                     className="w-3/4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-gray-400 transition-colors"
-                    defaultValue= "Enter Description"
+                    value = {selectedProject.description || 'Enter A Description'}
                     ref={descriptionRef}
-                    onChange={(event) => {descriptionRef.current.value = event.target.value;}}
+                    onChange={(event) => {descriptionRef.current.value = event.target.value;
+                        handleProjectUpdate({ description: event.target.value });
+                    }}
                 />
             </div>
             <div className="flex items-center space-x-4 w-2/3">
@@ -57,12 +54,16 @@ export default function AddProjectPage({selectedProject, handleSaveProject, name
                 <input 
                     type="date" 
                     className="w-3/4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 hover:border-gray-400 transition-colors"
-                    defaultValue= "Select due date"
+                    value = {selectedProject.date || ''}
                     ref={dateRef}
-                    onChange={(event) => {dateRef.current.value = event.target.value;}}
+                    onChange={(event) => {dateRef.current.value = event.target.value;
+                        handleProjectUpdate({ date: event.target.value });
+                    }}
                 />
             </div>
             </div>
         </div>
     );
-}
+});
+
+export default AddProjectPage;
