@@ -37,7 +37,8 @@ const AddProjectPage = forwardRef(function AddProjectPage({selectedProject, hand
                     onChange={(event) => {
                         nameRef.current.value = event.target.value;
                         handleProjectUpdate({ projectName: event.target.value });
-                    }}
+                        }
+                    }
                 />
             </div>
             <div className="flex items-center space-x-4 w-2/3">
