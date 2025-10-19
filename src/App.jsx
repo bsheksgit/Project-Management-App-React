@@ -17,6 +17,11 @@ function App() {
       );
     }
   
+  function handleDeleteProject(){
+    setProjectList(prev => prev.filter((_, i) => i !== selectedProjectIndex));
+    setSelectedProjectIndex(-1);
+  }
+  
   function handleSelectProject(projectButtonName){
       let index = projectList.findIndex((projectItem) => projectItem.projectName === projectButtonName)
       console.log(index)
@@ -56,6 +61,22 @@ function App() {
           tasks: [...newProjectList[selectedProjectIndex].tasks, value.task]
       };
       setProjectList(newProjectList);
+      taskRef.current.clearValue();
+  }
+
+  function handleCancelClick(){
+    setSelectedProjectIndex(-1)
+  }
+
+  function handleClearClick(){
+
+      const newProjectList = [...projectList];
+      newProjectList[selectedProjectIndex] = {
+          ...newProjectList[selectedProjectIndex],
+          tasks: []
+      };
+      setProjectList(newProjectList);
+
   }
 
   return (
@@ -71,8 +92,14 @@ function App() {
             handleSaveProject={handleSaveProject}
             ref={formRef}
             handleProjectUpdate={handleProjectUpdate}
-        />:<ProjectDetails selectedProject={projectList[selectedProjectIndex]} handleAddTask={handleAddTask} ref={taskRef}/>):
-        <BlankProjectWindow/>}
+            handleCancelClick = {handleCancelClick}
+        />:<ProjectDetails 
+        selectedProject={projectList[selectedProjectIndex]} 
+        handleAddTask={handleAddTask} 
+        handleClearClick = {handleClearClick}
+        handleDeleteProject = {handleDeleteProject}
+        ref={taskRef}/>):
+        <BlankProjectWindow projectList={projectList} handleAddProject={handleAddProject}/>}
       </div>
     </div>
   );
