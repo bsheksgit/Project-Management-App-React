@@ -19,7 +19,7 @@ export default function YourProjects({projectList, handleAddProject, handleSelec
         <div className='inline-block px-4 py-2 bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors cursor-pointer'>
             <button className='text-white font-medium' onClick={() => handleAddProject(newProject)}>+ Add Project</button>
         </div>
-            <ul>
+            <ul className="max-h-[calc(100vh-200px)] overflow-y-auto scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-transparent">
             {projectList.map((projectName, index) => <ProjectListItem key={index} project={projectName} handleSelectProject={handleSelectProject}/>)}
         </ul>
     </div>);

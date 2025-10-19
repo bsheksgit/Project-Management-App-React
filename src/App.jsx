@@ -1,5 +1,6 @@
 import AddProjectPage from "./components/AddProjectPage";
 import BlankProjectWindow from "./components/BlankProjectWindow";
+import DeleteModal from "./components/DeleteModal";
 import ProjectDetails from "./components/ProjectDetails";
 import SaveModal from "./components/SaveModal";
 import YourProjects from "./components/YourProjects";
@@ -10,6 +11,7 @@ function App() {
   const [projectList, setProjectList] = useState([]);
   const [selectedProjectIndex, setSelectedProjectIndex] = useState(-1);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [modalContent, setModalContent] = useState({ message: '', description: '' });
   const formRef = useRef();
   const taskRef = useRef();
@@ -20,9 +22,18 @@ function App() {
       );
     setSelectedProjectIndex(projectList.length);
     }
-  
-  function handleDeleteProject(){
 
+
+  function handleShowDeleteModal(){
+        setModalContent({
+        message: "Are you sure?",
+        description: "Please confirm whether you want to delete this project."
+      });
+      setShowDeleteModal(true);
+
+  }
+
+  function handleDeleteProject(){
     if(projectList.length == 1){
       setSelectedProjectIndex(-1);
     }
@@ -30,11 +41,11 @@ function App() {
       setSelectedProjectIndex((prevValue) => prevValue-1);
     }
     setProjectList(prev => prev.filter((_, i) => i !== selectedProjectIndex));
+    setShowDeleteModal(false);
   }
   
   function handleSelectProject(projectButtonName){
       let index = projectList.findIndex((projectItem) => projectItem.projectName === projectButtonName)
-      console.log(index)
       setSelectedProjectIndex(index);
   }
 
@@ -73,6 +84,7 @@ function App() {
 
   function handleAddTask(){
     const value = taskRef.current.getValue();
+    console.log(value);
     if(value.task ===''){
       setModalContent({
         message: "Empty Task!",
@@ -89,10 +101,6 @@ function App() {
       };
       setProjectList(newProjectList);
       taskRef.current.clearValue();
-  }
-
-  function handleCancelClick(){
-    setSelectedProjectIndex(-1)
   }
 
   function handleClearClick(){
@@ -123,17 +131,21 @@ function App() {
             handleSaveProject={handleSaveProject}
             ref={formRef}
             handleProjectUpdate={handleProjectUpdate}
-            handleCancelClick = {handleCancelClick}
+            handleCancelClick = {handleDeleteProject}
         />:<ProjectDetails 
         selectedProject={projectList[selectedProjectIndex]} 
         handleAddTask={handleAddTask} 
         handleClearClick = {handleClearClick}
-        handleDeleteProject = {handleDeleteProject}
+        handleShowDeleteModal = {handleShowDeleteModal}
         ref={taskRef}/>):
         <BlankProjectWindow projectList={projectList} handleAddProject={handleAddProject}/>}
         {showModal && <SaveModal mainMessage={modalContent.message} 
         messageDescription={modalContent.description} 
         handleCloseModal={handleCloseModal} />}
+        {showDeleteModal && <DeleteModal mainMessage={modalContent.message} 
+        messageDescription={modalContent.description} 
+        handleDeleteProject={handleDeleteProject}
+        handleCloseDeleteModal={() => setShowDeleteModal(false)}/>}
       </div>
     </div>
   );
